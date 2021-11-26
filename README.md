@@ -1,3 +1,32 @@
+# Fork说明
+
+RedisLV是2015年创建，在18-19年断更的缓存+数据库的卡牌游戏缓存解决方案。
+
+它利用Redis作为缓存，LevelDB落地。二者都在内存中进行，同时实现快速缓存+落地。
+
+数据同步逻辑是，监听redis aof写入行为，将操作写入到LevelDB。
+
+但是由于Redis数据都在内存中，并且没有考虑单点、迁移和LevelDB SST文件合并导致瞬间磁盘IO压力等问题导致这个方案并不可靠。
+
+所以在互联网公司应用不多。
+
+但是在游戏中，分服卡牌手游要求的特点，他都能满足，所以基本可以作为单服存储方案。比如少年三国志二、三。
+
+在类似的技术方案上。360在此基础上开发了pika（redis+rocksdb）。另外还有ssdb（redis+leveldb）。相对来说，pika是更好的选择。
+
+在pika、codis、redis基础上，喜马拉雅有xcache可以做冷热数据分离
+
+[pika](https://github.com/OpenAtomFoundation/pika/blob/master/README_CN.md)
+
+[ssdb](https://github.com/ideawu/ssdb)
+
+[xcache](https://github.com/XimalayaCloud/xcache)
+
+---
+
+原项目如下
+
+--- 
 [RedisLV-支持基于LevelDB的Redis持久化方法](https://github.com/ivanabc/RedisLV)
 ---
 
