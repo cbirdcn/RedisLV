@@ -6,7 +6,7 @@ RedisLV是2015年创建，在18-19年断更的缓存+数据库的卡牌游戏缓
 
 数据同步逻辑是，监听redis aof写入行为，将操作写入到LevelDB。
 
-但是由于Redis数据都在内存中，并且没有考虑单点、迁移和LevelDB SST文件合并导致瞬间磁盘IO压力等问题导致这个方案并不可靠。
+但是由于Redis数据都在内存中，并且没有考虑集群、迁移和LevelDB SST文件合并导致瞬间磁盘IO压力等问题导致这个方案并不可靠。
 
 所以在互联网公司应用不多。
 
@@ -24,7 +24,40 @@ RedisLV是2015年创建，在18-19年断更的缓存+数据库的卡牌游戏缓
 
 ---
 
-原项目如下
+## 对原项目的使用做出说明：
+
+安装：找到Makefile位置，make
+
+redis-server、redis-cli可执行文件在src下
+
+修改配置文件
+
+在同路径下找到redis.conf，备份，修改如下：
+```
+port 7272 # redis-server启动端口
+bind 0.0.0.0 # 改成允许远程访问
+databases 255 # 默认数据库数量16太少
+```
+
+其他配置说明：
+```
+daemonize yes # 默认后台启动
+dir ./ # 工作路径
+leveldb yes # 存储引擎：是为leveldb，否为redis
+leveldb-path ./var # leveldb数据存储路径
+```
+
+其他配置根据使用情况调整
+
+启动：
+```
+RedisLV/src/redis-server RedisLV/redis.conf
+```
+
+测试：
+```
+RedisLV/src/redis-cli -h 127.0.0.1 -p 7272
+```
 
 --- 
 [RedisLV-支持基于LevelDB的Redis持久化方法](https://github.com/ivanabc/RedisLV)
